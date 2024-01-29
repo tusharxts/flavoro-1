@@ -14,6 +14,7 @@ export default function App() {
           element={<ProtectedRoute element={<Success />} />}
         />
         <Route path="/*" element={<Error />} />
+        <Route path="/error" element={<Error />} />
       </Routes>
     </BrowserRouter>
   );

@@ -3,7 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import ItemCard from "./ItemCard";
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [activeCart, setActiveCart] = useState(false);
@@ -15,6 +15,27 @@ const Cart = () => {
     0
   );
   const navigate = useNavigate();
+
+  const checkout = async () => {
+    const res = await fetch("http://localhost:4242/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cartItems }),
+    });
+
+    const data = await res.json();
+    console.log(data.url);
+
+    window.location.href = data.url;
+  };
+
+  // Check if the current URL contains "/success"
+  if (window.location.href.includes("/success")) {
+    // Display success message or perform actions related to a successful payment
+    console.log("Payment successful!");
+  }
 
   return (
     <>
@@ -61,7 +82,7 @@ const Cart = () => {
           <hr className="lg:w-[18vw] w-[90vw] my-2 " />
 
           <button
-            onClick={() => navigate("/success")}
+            onClick={checkout}
             className="bg-green-500 font-bold px-3 text-white py-2 rounded-lg lg:w-[18vw] w-[90vw] mb-5"
           >
             Checkout
