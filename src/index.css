@@ -7,6 +7,7 @@
   /* background: rgb(244, 244, 244); */
   font-family: "Poppins", sans-serif;
   scroll-behavior: smooth;
+  overflow: hidden;
 }
 body {
   background: rgb(244, 244, 244);

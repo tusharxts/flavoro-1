@@ -28,13 +28,13 @@ const Navbar = () => {
         />
       </div>
       <GiHamburgerMenu
-        className={`absolute top-5 right-5 lg:right-8 lg:top-6 text-2xl cursor-pointer ${
+        className={`absolute top-5 right-5 lg:right-8 lg:top-6 text-2xl text-gray-600 cursor-pointer ${
           toggleNav && "hidden"
         } transition-all ease-in-out duration-500`}
         onClick={() => setToggleNav(true)}
       />
       <MdClose
-        className={`absolute top-5 right-5 lg:right-8 lg:top-6 text-2xl cursor-pointer ${
+        className={`absolute top-5 right-5 lg:right-8 lg:top-6 text-2xl text-gray-600 cursor-pointer ${
           !toggleNav && "hidden"
         } transition-all ease-in-out duration-500`}
         onClick={() => setToggleNav(false)}
