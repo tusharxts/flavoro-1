@@ -5,27 +5,36 @@ import { useDispatch } from "react-redux";
 import { removeFromCart } from "../redux/slices/CartSlice";
 import { incrementQty, decrementQty } from "../redux/slices/CartSlice";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
-const ItemCard = ({ id, img, name, price, qty }) => {
+const ItemCard = ({ id, image, name, price, quantity, _id }) => {
   const dispatch = useDispatch();
 
+  const removeFromCart = async (id) => {
+    const res = await axios.delete(
+      `http://localhost:5000/api/remove-from-cart/${id}`
+    );
+    const data = await res.data;
+    toast.success(data.message);
+  };
+
+  const incrementQuantity = async (id) => {
+    const res = await axios.put(
+      `http://localhost:5000/api/increment-quantity/${id}`
+    );
+    const data = await res.data;
+    toast.success(data.message);
+  };
+
   return (
-    <div className="flex gap-2 shadow-lg rounded-lg p-2 bg-white mb-3" key={id}>
+    <div className="flex gap-2 shadow-lg rounded-lg p-2 bg-white mb-3">
       <MdDelete
         className="absolute right-7 text-gray-600 cursor-pointer"
         onClick={() => {
-          dispatch(removeFromCart({ id, img, name, price, qty }));
-          toast(`${name} Removed!`, {
-            icon: "👋",
-          });
+          removeFromCart(_id);
         }}
       />
-      <img
-        src={img}
-        alt="pizza"
-        srcset=""
-        className="w-[50px] h-[50px] my-auto"
-      />
+      <img src={image} alt="pizza" className="w-[50px] h-[50px] my-auto" />
       <div className="bg-white leading-5 ">
         <h2 className="bg-white font-bold text-gray-800">{name}</h2>
         <div className="flex justify-between items-center w-full bg-white">
@@ -34,17 +43,17 @@ const ItemCard = ({ id, img, name, price, qty }) => {
           </span>
           <div className="flex justify-center items-center gap-2 bg-white absolute right-7">
             <AiOutlineMinus
-              onClick={() =>
-                qty > 1 ? dispatch(decrementQty({ id })) : qty == 0
-              }
+              // onClick={() =>
+              //   quantity > 1 ? dispatch(decrementQty({ id })) : quantity == 0
+              // }
               className="bg-white border-2 border-gray-600 text-gray-600 hover:text-white hover:bg-green-500 hover:border-none cursor-pointer transition-all ease-linear font-bold p-1 text-xl rounded-md"
             />
             <span className="text-green-500 font-semibold bg-white text-center select-none ">
-              {qty}
+              {quantity}
             </span>
             <AiOutlinePlus
               onClick={() =>
-                qty >= 1 ? dispatch(incrementQty({ id })) : qty == 0
+                quantity >= 1 ? incrementQuantity(_id) : quantity == 0
               }
               className="bg-white border-2 border-gray-600 text-gray-600 hover:text-white hover:bg-green-500 hover:border-none cursor-pointer transition-all ease-linear font-bold p-1 text-xl rounded-md"
             />

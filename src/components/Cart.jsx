@@ -1,41 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import ItemCard from "./ItemCard";
 import { FaShoppingCart } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { redirect, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { setCart } from "../redux/slices/CartSlice";
 
 const Cart = () => {
+  const dispatch = useDispatch();
+
   const [activeCart, setActiveCart] = useState(false);
   const cartItems = useSelector((state) => state.cart.cart);
 
-  const totalQty = cartItems.reduce((totalQty, item) => totalQty + item.qty, 0);
+  const totalQty = cartItems.reduce(
+    (totalQty, item) => totalQty + item.quantity,
+    0
+  );
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.qty * item.price,
+    (total, item) => total + item.quantity * item.price,
     0
   );
   const navigate = useNavigate();
-
-  const checkout = async () => {
-    const res = await fetch("http://localhost:4242/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ cartItems }),
-    });
-
-    const data = await res.json();
-    console.log(data.url);
-
-    window.location.href = data.url;
-  };
-
-  // Check if the current URL contains "/success"
-  if (window.location.href.includes("/success")) {
-    // Display success message or perform actions related to a successful payment
-    console.log("Payment successful!");
-  }
 
   return (
     <>
@@ -55,16 +41,7 @@ const Cart = () => {
         </div>
 
         {cartItems.length > 0 ? (
-          cartItems.map((food) => (
-            <ItemCard
-              key={food.id}
-              id={food.id}
-              name={food.name}
-              price={food.price}
-              img={food.img}
-              qty={food.qty}
-            />
-          ))
+          cartItems.map((food) => <ItemCard key={food.id} {...food} />)
         ) : (
           <h2 className="text-center text-xl font-bold text-gray-800">
             Your cart is empty
@@ -82,7 +59,7 @@ const Cart = () => {
           <hr className="lg:w-[18vw] w-[90vw] my-2 " />
 
           <button
-            onClick={checkout}
+            // onClick={checkout}
             className="bg-green-500 font-bold px-3 text-white py-2 rounded-lg lg:w-[18vw] w-[90vw] mb-5"
           >
             Checkout

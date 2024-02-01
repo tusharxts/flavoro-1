@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 // SIGNUP ROUTE
 const signup = async (req, res) => {
@@ -58,7 +59,7 @@ const login = async (req, res) => {
         httpOnly: true,
       })
       .status(200)
-      .json({ success: true, messgae: "Login Successful" });
+      .json({ success: true, message: "Login Successful" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -94,4 +95,65 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, logout, getUser };
+// RESET PASSWORD ROUTE
+const resetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const generatedOtp = Math.floor(Math.random() * 10000); // 4 digit otp
+
+    let user = User.findOneAndUpdate({ email }, { otp: generatedOtp });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Please Signup" });
+    }
+
+    var transporter = nodemailer.createTransport({
+      host: "sandbox.smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: "1a3dcabf03fd1c",
+        pass: "94b04cc7977084",
+      },
+    });
+
+    const info = await transporter.sendMail({
+      from: "coder29yt@gmail.com", // sender address
+      to: email, // list of receivers
+      subject: "New otp has been generated", // Subject line
+      html: `<h3>Your Generated Otp is : <i>${generatedOtp}</i> </h3>`, // html body
+    });
+
+    if (info.messageId) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Otp has been sent to your email" });
+    }
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// VERIFY OTP ROUTE
+const verifyOtp = async (req, res) => {
+  const { otp, newPassword } = req.body;
+
+  try {
+    const securePassword = await bcrypt.hash(newPassword, 10);
+
+    let user = await User.findOneAndUpdate(
+      { otp },
+      { password: securePassword }
+    );
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid Otp" });
+    }
+
+    return res.status(200).json({ success: true, message: "Password Updated" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { signup, login, logout, getUser, resetPassword, verifyOtp };

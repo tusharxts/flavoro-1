@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Food = require("./Food");
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -16,7 +17,12 @@ const userSchema = new mongoose.Schema({
   },
   cartItems: {
     type: Array,
-    default: [],
+    default: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "food",
+      },
+    ],
   },
 });
 

@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "./redux/slices/AuthSlice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +20,7 @@ const Login = () => {
     });
     const data = await res.data;
     if (res.status === 200) {
+      dispatch(loginUser());
       toast.success(data.message);
       navigate("/");
     } else if (res.status === 400 || res.status === 500) {

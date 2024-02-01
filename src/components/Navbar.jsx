@@ -1,12 +1,45 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../redux/slices/SearchSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
 import NavList from "./NavList";
+import axios from "axios";
+import { loginUser, setUser } from "../redux/slices/AuthSlice";
+import { setCart } from "../redux/slices/CartSlice";
+axios.defaults.withCredentials = true;
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const [toggleNav, setToggleNav] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+
+  const getUser = async () => {
+    const res = await axios.get("http://localhost:5000/api/get-user", {
+      withCredentials: true,
+    });
+    const data = await res.data;
+    dispatch(setUser(data.user));
+    dispatch(loginUser());
+  };
+
+  const getCart = async () => {
+    const res = await axios.get(
+      `http://localhost:5000/api/get-cart/${user._id}`
+    );
+    const data = await res.data;
+    console.log(data);
+    dispatch(setCart(data.cartItems));
+  };
+
+  const auth = useSelector((state) => state.auth.isAuth);
+
+  console.log("Authenticated: ", auth);
+
+  useEffect(() => {
+    getUser();
+    getCart();
+  }, []);
 
   return (
     <nav className="flex flex-col lg:flex-row justify-between gap-5 py-3 mx-6 mb-10">

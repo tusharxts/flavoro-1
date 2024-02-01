@@ -1,10 +1,23 @@
 import React from "react";
 import { AiFillStar } from "react-icons/ai";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/slices/CartSlice";
+import { useDispatch, useSelector } from "react-redux";
+// import { addToCart } from "../redux/slices/CartSlice";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const FoodCard = ({ id, img, name, price, desc, handleToast, rating }) => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  const addToCart = async ({ id, img, name, rating, price, quantity }) => {
+    const res = await axios.post(
+      `http://localhost:5000/api/add-to-cart/${user._id}`,
+      { id, image: img, name, rating, price, quantity }
+    );
+    const data = await res.data;
+    toast.success(data.message);
+  };
+
 
   return (
     <div className="font-bold w-[250px] p-5 bg-white flex flex-col gap-2 rounded-lg">
@@ -25,8 +38,7 @@ const FoodCard = ({ id, img, name, price, desc, handleToast, rating }) => {
         <button
           className="p-1 text-white bg-green-500 hover:bg-green-600 rounded-lg text-sm"
           onClick={() => {
-            dispatch(addToCart({ id, img, name, rating, price, qty: 1 }));
-            handleToast(name);
+            addToCart({ id, img, name, rating, price, quantity: 1 });
           }}
         >
           Add to cart
