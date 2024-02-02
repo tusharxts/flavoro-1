@@ -13,6 +13,8 @@ const {
   removeFromCart,
   incrementQuantity,
   getCart,
+  checkout,
+  clearCart,
 } = require("./contollers/FeatureController");
 const { verifyToken } = require("./middlewares/verifyToken");
 
@@ -30,5 +32,6 @@ router.get("/get-cart/:id", getCart);
 router.delete("/remove-from-cart/:id", removeFromCart);
 router.put("/increment-quantity/:id", incrementQuantity);
 router.put("/decrement-quantity/:id", decrementQuantity);
-
+router.get("/checkout", verifyToken, checkout);
+router.get("/clear-cart",verifyToken,clearCart)
 module.exports = router;

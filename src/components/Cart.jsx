@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { redirect, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setCart } from "../redux/slices/CartSlice";
+axios.defaults.withCredentials = true;
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,14 @@ const Cart = () => {
     0
   );
   const navigate = useNavigate();
+
+  const checkout = async () => {
+    const res = await axios.get("http://localhost:5000/api/checkout", {
+      withCredentials: true,
+    });
+    const { url } = await res.data;
+    window.location = url;
+  };
 
   return (
     <>
@@ -59,7 +68,7 @@ const Cart = () => {
           <hr className="lg:w-[18vw] w-[90vw] my-2 " />
 
           <button
-            // onClick={checkout}
+            onClick={checkout}
             className="bg-green-500 font-bold px-3 text-white py-2 rounded-lg lg:w-[18vw] w-[90vw] mb-5"
           >
             Checkout

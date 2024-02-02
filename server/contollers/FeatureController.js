@@ -1,5 +1,8 @@
 const User = require("../models/User");
 const Food = require("../models/Food");
+const stripe = require("stripe")(
+  "sk_test_51OdELlSFi1hMjAp6cC9ZsorpgOpaXD6MfH4KRfqk22sF6MLKH4xGeFGjWhSQHNYBqOegO9xl56KOHnEg2PGJ8DrP00iYi44BlQ"
+);
 
 const addToCart = async (req, res) => {
   const userId = req.params.id;
@@ -42,7 +45,6 @@ const getCart = async (req, res) => {
 
   try {
     const cartItems = await Food.find({ userId });
-    console.log(cartItems);
     if (!cartItems) {
       return res
         .status(404)
@@ -81,7 +83,7 @@ const incrementQuantity = async (req, res) => {
 
   try {
     let food = await Food.findOneAndUpdate(
-      { id },
+      { _id: id },
       [
         {
           $set: {
@@ -103,44 +105,104 @@ const incrementQuantity = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Food quantity incremented" });
+      .json({ success: true, message: "Food quantity incremented", food });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 const decrementQuantity = async (req, res) => {
-  const id = req.body.id;
+  const id = req.params.id;
 
   try {
     let food = await Food.findOneAndUpdate(
-      { id },
-      {
-        $inc: { quantity: -1, price: food.price + food.price },
-      },
+      { _id: id, quantity: { $gt: 0 } },
+      [
+        {
+          $set: {
+            quantity: { $subtract: ["$quantity", 1] },
+            price: { $multiply: ["$price", "$quantity"] },
+          },
+        },
+      ],
       {
         upsert: true,
+        new: true,
       }
     );
 
     if (!food) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Food not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Food not found or quantity already at minimum",
+      });
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Food quantity decremented",
-    });
+    return res
+      .status(200)
+      .json({ success: true, message: "Food quantity decremented", food });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+const checkout = async (req, res) => {
+  const userId = req.id;
+  try {
+    const cartItems = await Food.find({ userId });
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: cartItems.map((item) => {
+        return {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: item.name,
+              images: [item.image],
+            },
+            unit_amount: item.price * 100,
+          },
+          quantity: item.quantity,
+        };
+      }),
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/",
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const clearCart = async (req, res) => {
+  const userId = req.id;
+
+  try {
+    const deletedItems = await Food.deleteMany({ userId: userId });
+    const deletedList = await User.findOneAndUpdate(
+      { _id: userId },
+      { cartItems: [] }
+    );
+    if (!deletedItems) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Failed to clear cart" });
+    }
+    return res.status(200).json({ success: true, message: "Order Confirmed" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   addToCart,
   removeFromCart,
   incrementQuantity,
   decrementQuantity,
   getCart,
+  checkout,
+  clearCart,
 };

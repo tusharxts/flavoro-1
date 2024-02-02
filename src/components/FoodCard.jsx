@@ -18,7 +18,6 @@ const FoodCard = ({ id, img, name, price, desc, handleToast, rating }) => {
     toast.success(data.message);
   };
 
-
   return (
     <div className="font-bold w-[250px] p-5 bg-white flex flex-col gap-2 rounded-lg">
       <img
@@ -38,7 +37,9 @@ const FoodCard = ({ id, img, name, price, desc, handleToast, rating }) => {
         <button
           className="p-1 text-white bg-green-500 hover:bg-green-600 rounded-lg text-sm"
           onClick={() => {
-            addToCart({ id, img, name, rating, price, quantity: 1 });
+            !user
+              ? toast.error("Please login to add to cart")
+              : addToCart({ id, img, name, rating, price, quantity: 1 });
           }}
         >
           Add to cart

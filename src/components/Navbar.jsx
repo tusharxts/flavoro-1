@@ -31,6 +31,8 @@ const Navbar = () => {
     console.log(data);
     dispatch(setCart(data.cartItems));
   };
+  
+  getCart();
 
   const auth = useSelector((state) => state.auth.isAuth);
 
@@ -38,7 +40,6 @@ const Navbar = () => {
 
   useEffect(() => {
     getUser();
-    getCart();
   }, []);
 
   return (
@@ -72,7 +73,7 @@ const Navbar = () => {
         } transition-all ease-in-out duration-500`}
         onClick={() => setToggleNav(false)}
       />
-      <NavList toggleNav={toggleNav} setToggleNav={setToggleNav} />
+      <NavList toggleNav={toggleNav} setToggleNav={setToggleNav} auth={auth}/>
     </nav>
   );
 };
