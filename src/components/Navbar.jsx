@@ -20,6 +20,7 @@ const Navbar = () => {
       withCredentials: true,
     });
     const data = await res.data;
+    console.log(data.user);
     dispatch(setUser(data.user));
     dispatch(loginUser());
   };
