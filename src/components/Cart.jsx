@@ -25,17 +25,6 @@ const Cart = () => {
   );
   const navigate = useNavigate();
 
-  const clearCart = async () => {
-    const res = await axios.get(
-      "https://flavoro-backend-app.onrender.com/api/clear-cart",
-      {
-        withCredentails: true,
-      }
-    );
-    const data = await res.data;
-    toast.success(data.message);
-  };
-
   const checkout = async () => {
     const res = await axios.get(
       "https://flavoro-backend-app.onrender.com/api/checkout",
@@ -46,7 +35,6 @@ const Cart = () => {
     const { url } = await res.data;
     console.log(url);
     window.location.replace(url);
-    setTimeout(() => clearCart(), 3000);
   };
 
   return (
