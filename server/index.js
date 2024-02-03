@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 connectDb();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://flavoro-food-app.vercel.app/"],
     credentials: true,
   })
 );

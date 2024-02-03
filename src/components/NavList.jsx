@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const NavList = ({ toggleNav, setToggleNav, auth }) => {
   const handleLogout = async () => {
-    const res = await axios.get("http://localhost:5000/api/logout");
+    const res = await axios.get("https://flavoro-backend-app.onrender.com/api/logout");
     const data = await res.data;
     toast.success(data.message);
     window.location.href = "/";

@@ -9,7 +9,7 @@ const Success = () => {
   useEffect(() => setTimeout(() => setLoading(false), 3000), []);
 
   const clearCart = async () => {
-    const res = await axios.get("http://localhost:5000/api/clear-cart", {
+    const res = await axios.get("https://flavoro-backend-app.onrender.com/api/clear-cart", {
       withCredentails: true,
     });
     const data = await res.data;

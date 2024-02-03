@@ -12,10 +12,13 @@ const VerifyOtp = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put("http://localhost:5000/api/verify-otp", {
-        otp,
-        newPassword: password,
-      });
+      const res = await axios.put(
+        "https://flavoro-backend-app.onrender.com/api/verify-otp",
+        {
+          otp,
+          newPassword: password,
+        }
+      );
       const data = await res.data;
       if (res.status === 200) {
         toast.success(data.message);
