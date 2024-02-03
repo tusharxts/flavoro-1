@@ -16,9 +16,12 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
 
   const getUser = async () => {
-    const res = await axios.get("https://flavoro-backend-app.onrender.com/api/get-user", {
-      withCredentials: true,
-    });
+    const res = await axios.get(
+      "https://flavoro-backend-app.onrender.com/api/get-user",
+      {
+        withCredentials: true,
+      }
+    );
     const data = await res.data;
     console.log(data.user);
     dispatch(setUser(data.user));
@@ -36,7 +39,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="flex flex-col lg:flex-row justify-between gap-5 py-3 mx-6 mb-10">
+    <nav className="flex flex-col lg:flex-row justify-between gap-5 py-3 mx-6 mb-10 ">
       <div>
         <h3 className="text-xl font-bold text-gray-600">
           {new Date().toUTCString().slice(0, 16)}

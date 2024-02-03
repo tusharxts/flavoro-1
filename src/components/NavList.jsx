@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 
 const NavList = ({ toggleNav, setToggleNav, auth }) => {
   const handleLogout = async () => {
-    const res = await axios.get("https://flavoro-backend-app.onrender.com/api/logout");
+    const res = await axios.get(
+      "https://flavoro-backend-app.onrender.com/api/logout"
+    );
     const data = await res.data;
     toast.success(data.message);
     window.location.href = "/";
@@ -14,7 +16,7 @@ const NavList = ({ toggleNav, setToggleNav, auth }) => {
     <div
       className={`${
         !toggleNav && "translate-x-[200px]"
-      } absolute top-12 right-5 lg:right-8 p-3 w-fit bg-white bg-opacity-10 backdrop-blur-sm flex flex-col justify-center items-start rounded-lg shadow-md border border-white font-bold text-gray-600 transition-all duration-500 ease-in-out `}
+      } fixed top-12 right-5 lg:right-8 p-3 w-fit bg-white bg-opacity-10 backdrop-blur-sm flex flex-col justify-center items-start rounded-lg shadow-md border border-white font-bold text-gray-600 transition-all duration-500 ease-in-out `}
     >
       {" "}
       {auth ? (
