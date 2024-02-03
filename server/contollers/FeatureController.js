@@ -9,6 +9,29 @@ const addToCart = async (req, res) => {
   const { id, name, price, rating, image, quantity } = req.body;
 
   try {
+    let existingItem = await Food.findOne({ id, userId: userId });
+    console.log("Existing Item", existingItem);
+    if (existingItem) {
+      let updatedItem = await Food.findOneAndUpdate(
+        { id, userId },
+        {
+          $set: {
+            quantity: existingItem.quantity + 1,
+            totalPrice: existingItem.price * (existingItem.quantity + 1),
+          },
+        },
+        {
+          upsert: true,
+          new: true, // To return the updated document
+        }
+      );
+      if (!updatedItem) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Failed adding to cart" });
+      }
+      return res.status(201).json({ success: true, message: "Added to cart" });
+    }
     let newFood = await Food.create({
       id,
       name,
