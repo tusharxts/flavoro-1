@@ -12,3 +12,13 @@ body {
   background: rgb(244, 244, 244);
   overflow-x: hidden;
 }
+
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scroll-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

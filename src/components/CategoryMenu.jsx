@@ -23,10 +23,10 @@ const CategoryMenu = () => {
   return (
     <div className="ml-6">
       <h3 className="text-xl font-semibold">Find the best food</h3>
-      <div className="my-5 overflow-x-scroll flex gap-3 lg:overflow-x-hidden">
+      <div className="my-5 overflow-x-scroll scroll-hide flex gap-3 lg:overflow-x-hidden">
         <button
           onClick={() => dispatch(setCategory("All"))}
-          className={`px-3 py-2 scroll-smooth text-center bg-gray-200 font-bold hover:bg-green-500 hover:text-white cursor-pointer rounded-lg ${
+          className={`px-3 py-2 scroll-smooth  text-center bg-gray-200 font-bold hover:bg-green-500 hover:text-white cursor-pointer rounded-lg ${
             selectedCategory === "All" && "bg-green-500 text-white"
           }}`}
         >
@@ -36,7 +36,7 @@ const CategoryMenu = () => {
           <button
             key={index}
             onClick={() => dispatch(setCategory(category))}
-            className={`px-3 py-2 scroll-smooth text-center bg-gray-200 font-bold hover:bg-green-500 hover:text-white cursor-pointer rounded-lg ${
+            className={`px-3 py-2 scroll-smooth  text-center bg-gray-200 font-bold hover:bg-green-500 hover:text-white cursor-pointer rounded-lg ${
               selectedCategory === category && "bg-green-500 text-white"
             }`}
           >
