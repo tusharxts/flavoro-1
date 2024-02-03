@@ -17,6 +17,7 @@ const addToCart = async (req, res) => {
       image,
       quantity,
       userId,
+      totalPrice: price * quantity,
     });
     const savedFood = await newFood.save();
     let user = await User.findOneAndUpdate(
@@ -88,7 +89,7 @@ const incrementQuantity = async (req, res) => {
         {
           $set: {
             quantity: { $add: ["$quantity", 1] },
-            price: { $multiply: ["$price", { $add: ["$quantity", 1] }] },
+            totalPrice: { $multiply: ["$price", { $add: ["$quantity", 1] }] },
           },
         },
       ],
@@ -121,7 +122,10 @@ const decrementQuantity = async (req, res) => {
         {
           $set: {
             quantity: { $subtract: ["$quantity", 1] },
-            price: { $multiply: ["$price", "$quantity"] },
+            // price: { $multiply: ["$price", { $subtract: ["$quantity", 1] }] },
+            totalPrice: {
+              $subtract: ["$totalPrice", "$price"],
+            },
           },
         },
       ],
@@ -134,7 +138,7 @@ const decrementQuantity = async (req, res) => {
     if (!food) {
       return res.status(404).json({
         success: false,
-        message: "Food not found or quantity already at minimum",
+        message: "Food not found or quantity already at the minimum",
       });
     }
 

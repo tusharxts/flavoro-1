@@ -5,6 +5,7 @@ const foodSchema = new mongoose.Schema(
     id: Number,
     name: String,
     price: Number,
+    totalPrice: Number,
     rating: Number,
     image: String,
     quantity: Number,
