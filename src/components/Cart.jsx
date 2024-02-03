@@ -29,7 +29,8 @@ const Cart = () => {
       withCredentials: true,
     });
     const { url } = await res.data;
-    window.location = url;
+    // window.location = url;
+    navigate(url);
   };
 
   return (
