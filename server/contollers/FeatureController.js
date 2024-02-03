@@ -194,8 +194,8 @@ const checkout = async (req, res) => {
           quantity: item.quantity,
         };
       }),
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/",
+      success_url: "https://flavoro-food-app.vercel.app/success",
+      cancel_url: "https://flavoro-food-app.vercel.app/",
     });
 
     res.json({ url: session.url });
