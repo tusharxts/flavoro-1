@@ -45,7 +45,7 @@ const Cart = () => {
     );
     const { url } = await res.data;
     console.log(url);
-    window.location.replace = url;
+    window.location.replace(url);
     setTimeout(() => clearCart(), 3000);
   };
 
