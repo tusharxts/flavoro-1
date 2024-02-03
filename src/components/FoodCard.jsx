@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 // import { addToCart } from "../redux/slices/CartSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { setCart } from "../redux/slices/CartSlice";
+import { getCart } from "../helpers";
 
 const FoodCard = ({ id, img, name, price, desc, handleToast, rating }) => {
   const dispatch = useDispatch();
@@ -16,6 +18,7 @@ const FoodCard = ({ id, img, name, price, desc, handleToast, rating }) => {
     );
     const data = await res.data;
     toast.success(data.message);
+    getCart(user).then((data) => dispatch(setCart(data.cartItems)));
   };
 
   return (

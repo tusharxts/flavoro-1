@@ -7,6 +7,8 @@ import NavList from "./NavList";
 import axios from "axios";
 import { loginUser, setUser } from "../redux/slices/AuthSlice";
 import { setCart } from "../redux/slices/CartSlice";
+import { getCart } from "../helpers";
+import useGetCart from "../custom-hooks/useGetCart";
 axios.defaults.withCredentials = true;
 
 const Navbar = () => {
@@ -23,16 +25,18 @@ const Navbar = () => {
     dispatch(loginUser());
   };
 
-  const getCart = async () => {
-    const res = await axios.get(
-      `http://localhost:5000/api/get-cart/${user._id}`
-    );
-    const data = await res.data;
-    console.log(data);
-    dispatch(setCart(data.cartItems));
-  };
-  
-  getCart();
+  // const getCart = async () => {
+  //   const res = await axios.get(
+  //     `http://localhost:5000/api/get-cart/${user._id}`
+  //   );
+  //   const data = await res.data;
+  //   console.log(data);
+  //   dispatch(setCart(data.cartItems));
+  // };
+
+  // getCart();
+
+  getCart(user).then((data) => dispatch(setCart(data.cartItems)));
 
   const auth = useSelector((state) => state.auth.isAuth);
 
@@ -73,7 +77,7 @@ const Navbar = () => {
         } transition-all ease-in-out duration-500`}
         onClick={() => setToggleNav(false)}
       />
-      <NavList toggleNav={toggleNav} setToggleNav={setToggleNav} auth={auth}/>
+      <NavList toggleNav={toggleNav} setToggleNav={setToggleNav} auth={auth} />
     </nav>
   );
 };

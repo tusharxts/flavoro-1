@@ -24,13 +24,15 @@ const NavList = ({ toggleNav, setToggleNav, auth }) => {
           Logout
         </li>
       ) : (
-        <Link to="/login" className="hover:text-black select-none">
-          Login
-        </Link>
+        <div className="flex flex-col">
+          <Link to="/login" className="hover:text-black select-none">
+            Login
+          </Link>
+          <Link to="/signup" className="hover:text-black select-none">
+            Signup
+          </Link>
+        </div>
       )}
-      <Link to="/signup" className="hover:text-black select-none">
-        Signup
-      </Link>
     </div>
   );
 };
