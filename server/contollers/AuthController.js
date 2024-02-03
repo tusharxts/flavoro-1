@@ -102,7 +102,7 @@ const resetPassword = async (req, res) => {
   try {
     const generatedOtp = Math.floor(Math.random() * 10000); // 4 digit otp
 
-    let user = User.findOneAndUpdate({ email }, { otp: generatedOtp });
+    let user = User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ success: false, message: "Please Signup" });
@@ -125,6 +125,16 @@ const resetPassword = async (req, res) => {
     });
 
     if (info.messageId) {
+      await User.findOneAndUpdate(
+        {
+          email,
+        },
+        {
+          $set: {
+            otp: generatedOtp,
+          },
+        }
+      );
       return res
         .status(200)
         .json({ success: true, message: "Otp has been sent to your email" });
@@ -143,7 +153,12 @@ const verifyOtp = async (req, res) => {
 
     let user = await User.findOneAndUpdate(
       { otp },
-      { password: securePassword }
+      {
+        $set: {
+          password: securePassword,
+          otp: 0,
+        },
+      }
     );
 
     if (!user) {

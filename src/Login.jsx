@@ -23,7 +23,8 @@ const Login = () => {
       dispatch(loginUser());
       toast.success(data.message);
       navigate("/");
-    } else if (res.status === 400 || res.status === 500) {
+    }
+    if (res.status === 400) {
       toast.error(data.message);
     }
   };
@@ -55,9 +56,12 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <span className="text-xs text-gray-600 hover:underline cursor-pointer -mb-1">
+        <Link
+          to={"/forgot-password"}
+          className="text-xs text-gray-600 hover:underline cursor-pointer -mb-1"
+        >
           Forgot Password
-        </span>
+        </Link>
         <button
           type="submit"
           className="outline-none border rounded-md px-3 py-2  text-white bg-green-500 hover:bg-green-300"

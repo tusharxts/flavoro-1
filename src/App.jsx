@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./Login";
 import Signup from "./Signup";
 import { Toaster } from "react-hot-toast";
+import ResetPassword from "./ResetPassword";
+import VerifyOtp from "./VerifyOtp";
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
         />
         <Route path="/*" element={<Error />} />
         <Route path="/error" element={<Error />} />
+        <Route path="/forgot-password" element={<ResetPassword />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
       </Routes>
     </BrowserRouter>
   );
