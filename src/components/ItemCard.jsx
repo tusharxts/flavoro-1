@@ -28,7 +28,6 @@ const ItemCard = ({ id, image, name, price, quantity, _id }) => {
     );
     const data = await res.data;
     console.log(data);
-    toast.success(data.message);
     getCart(user).then((data) => dispatch(setCart(data.cartItems)));
   };
 
@@ -38,7 +37,6 @@ const ItemCard = ({ id, image, name, price, quantity, _id }) => {
     );
     const data = await res.data;
     console.log(data);
-    toast.success(data.message);
     getCart(user).then((data) => dispatch(setCart(data.cartItems)));
   };
 
