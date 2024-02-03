@@ -194,11 +194,8 @@ const checkout = async (req, res) => {
           quantity: item.quantity,
         };
       }),
-      // success_url: "http://localhost:5173/success",
-      // cancel_url: "http://localhost:5173/",
-
-      success_url: "/success",
-      cancel_url: "/",
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/",
     });
 
     res.json({ url: session.url });
