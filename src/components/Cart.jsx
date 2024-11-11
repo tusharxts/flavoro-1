@@ -42,7 +42,7 @@ const Cart = () => {
       <div
         className={`fixed right-0 top-0 w-screen h-full lg:w-[20vw] p-5 bg-white ${
           activeCart ? "translate-x-0" : "translate-x-full"
-        } transition-all duration-500 z-50`}
+        } transition-all duration-500 z-50`} id="cartbg"
       >
         <div className="flex justify-between items-center bg-white my-3">
           <span className="bg-white text-xl font-bold text-gray-800 ">

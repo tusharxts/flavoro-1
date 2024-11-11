@@ -1,8 +1,10 @@
-const User = require("../models/User");
-const Food = require("../models/Food");
-const stripe = require("stripe")(
-  "sk_test_51OdELlSFi1hMjAp6cC9ZsorpgOpaXD6MfH4KRfqk22sF6MLKH4xGeFGjWhSQHNYBqOegO9xl56KOHnEg2PGJ8DrP00iYi44BlQ"
-);
+import User from "../models/User";
+import Food from "../models/Food";
+import stripe from "stripe";
+
+
+stripe("sk_test_51Pr2Y7RqZVvd8Y477jHJVObEZ2V5YvEnnOfiAdttav09BghYw9kOg3jZjA252TEZOuWolKcs9RqblTJEiLadZLo900ZVt85pBT")
+// "sk_test_51Pr2Y7RqZVvd8Y477jHJVObEZ2V5YvEnnOfiAdttav09BghYw9kOg3jZjA252TEZOuWolKcs9RqblTJEiLadZLo900ZVt85pBT"
 
 const addToCart = async (req, res) => {
   const userId = req.params.id;
@@ -194,8 +196,8 @@ const checkout = async (req, res) => {
           quantity: item.quantity,
         };
       }),
-      success_url: "https://flavoro-food-app.vercel.app/success",
-      cancel_url: "https://flavoro-food-app.vercel.app/",
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173",
     });
 
     res.json({ url: session.url });

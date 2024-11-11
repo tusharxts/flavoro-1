@@ -25,7 +25,7 @@ const Success = () => {
       {loading ? (
         <PropagateLoader color="#22C55E" />
       ) : (
-        <div>
+        <div id="success-box">
           <h2 className="text-3xl font-semibold mb-4 flex flex-col justify-center items-center">
             Order Successful!
           </h2>

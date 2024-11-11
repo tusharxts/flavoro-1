@@ -12,11 +12,14 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const res = await axios.post("https://flavoro-backend-app.onrender.com/api/signup", {
-      name,
-      email,
-      password,
-    });
+    const res = await axios.post(
+      "https://flavoro-backend-app.onrender.com/api/signup",
+      {
+        name,
+        email,
+        password,
+      }
+    );
     const data = await res.data;
     if (res.status === 201) {
       toast.success(data.message);
@@ -27,11 +30,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen ">
+    <div
+      className="flex justify-center items-center h-screen bg-cover bg-center "
+      id="op"
+    >
       <form
         onSubmit={handleSignup}
         className="bg-white rounded-lg p-5 shadow-lg flex flex-col gap-3 w-[80vw] lg:w-[20vw] text-sm"
+        id="formm"
       >
+        <h1>Create Account </h1>
         <input
           type="name"
           name="name"
@@ -72,7 +80,7 @@ const Signup = () => {
         </button>
         <p className="text-xs text-gray-600 flex gap-2 -mt-1">
           <span>Or</span>
-          <Link to="/login" className="hover:text-green-600">
+          <Link to="/login" className="hover:text-orange-600">
             Login to your account
           </Link>
         </p>

@@ -1,16 +1,18 @@
-const express = require("express");
+import express from "express";
 const app = express();
 const port = 5000;
-const cors = require("cors");
-require("dotenv").config();
-const { connectDb } = require("./connection");
-const routes = require("./routes");
-const cookieParser = require("cookie-parser");
+import cors from "cors";
+import dotenv from "dotenv"
+import { connectDb } from "./connection.js";
+import routes from "./routes";
+import cookieParser from "cookie-parser";
+
+dotenv.config();
 
 connectDb();
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://flavoro-food-app.vercel.app"],
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );

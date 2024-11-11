@@ -115,13 +115,13 @@ const resetPassword = async (req, res) => {
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
-        user: "1a3dcabf03fd1c",
-        pass: "94b04cc7977084",
-      },
+        user: "2242e16b435b21",
+        pass: "5e868c15705c32"
+      }
     });
 
     const info = await transporter.sendMail({
-      from: "coder29yt@gmail.com", // sender address
+      from: "odin06190@gmail.com", // sender address
       to: email, // list of receivers
       subject: "New otp has been generated", // Subject line
       html: `<h3>Your Generated Otp is : <i>${generatedOtp}</i> </h3>`, // html body

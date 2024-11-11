@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "./redux/slices/AuthSlice";
+// import { urlencoded } from "express";
+// import foodbg from ".assets/food bg.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,10 +16,13 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await axios.post("https://flavoro-backend-app.onrender.com/api/login", {
-      email,
-      password,
-    });
+    const res = await axios.post(
+      "https://flavoro-backend-app.onrender.com/api/login",
+      {
+        email,
+        password,
+      }
+    );
     const data = await res.data;
     if (res.status === 200) {
       dispatch(loginUser());
@@ -30,11 +35,16 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen ">
+    <div
+      className=" bg-cover bg-center flex justify-center items-center h-screen "
+      id="op" 
+    >
       <form
         onSubmit={handleLogin}
-        className="bg-white rounded-lg p-5 shadow-lg flex flex-col gap-3 w-[80vw] lg:w-[20vw] text-sm"
+        className="bg-white rounded-lg p-5 shadow-lg flex flex-col gap-3 w-[80vw] lg:w-[20vw] text-sm  lg:h-25vw] "
+        id="formm"
       >
+        <h1>Welcome Back</h1>
         <input
           type="email"
           name="email"
@@ -70,7 +80,7 @@ const Login = () => {
         </button>
         <p className="text-xs text-gray-600 flex gap-2 -mt-1">
           <span>Or</span>
-          <Link to="/signup" className="hover:text-green-600">
+          <Link to="/signup" className="hover:text-orange-600">
             Create your account
           </Link>
         </p>
