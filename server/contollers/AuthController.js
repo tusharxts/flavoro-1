@@ -1,10 +1,10 @@
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import User from "../models/User.js";
 
 // SIGNUP ROUTE
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
   const { email, password, name } = req.body;
 
   try {
@@ -26,14 +26,14 @@ const signup = async (req, res) => {
 
     return res
       .status(201)
-      .json({ success: true, message: "Singup Successful" });
+      .json({ success: true, message: "Signup Successful" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // LOGIN ROUTE
-const login = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -50,13 +50,11 @@ const login = async (req, res) => {
         .json({ success: false, message: "Invalid Credentials" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const jwtSecret = process.env.JWT_SECRET || "default-secret";
+    const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "1h" });
 
     return res
       .cookie("token", token, {
-        // httpOnly: true,
         httpOnly: false,
         sameSite: "none",
         secure: true,
@@ -69,7 +67,7 @@ const login = async (req, res) => {
 };
 
 // LOGOUT ROUTE
-const logout = async (req, res) => {
+export const logout = async (req, res) => {
   try {
     res
       .clearCookie("token")
@@ -80,7 +78,7 @@ const logout = async (req, res) => {
 };
 
 // GET USER ROUTE
-const getUser = async (req, res) => {
+export const getUser = async (req, res) => {
   const reqId = req.id;
 
   try {
@@ -99,48 +97,43 @@ const getUser = async (req, res) => {
 };
 
 // RESET PASSWORD ROUTE
-const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
     const generatedOtp = Math.floor(Math.random() * 10000); // 4 digit otp
 
-    let user = User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ success: false, message: "Please Signup" });
     }
 
-    var transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
         user: "2242e16b435b21",
-        pass: "5e868c15705c32"
-      }
+        pass: "5e868c15705c32",
+      },
     });
 
     const info = await transporter.sendMail({
       from: "odin06190@gmail.com", // sender address
       to: email, // list of receivers
-      subject: "New otp has been generated", // Subject line
-      html: `<h3>Your Generated Otp is : <i>${generatedOtp}</i> </h3>`, // html body
+      subject: "New OTP has been generated", // Subject line
+      html: `<h3>Your Generated OTP is: <i>${generatedOtp}</i></h3>`, // html body
     });
 
     if (info.messageId) {
       await User.findOneAndUpdate(
-        {
-          email,
-        },
-        {
-          $set: {
-            otp: generatedOtp,
-          },
-        }
+        { email },
+        { $set: { otp: generatedOtp } }
       );
+
       return res
         .status(200)
-        .json({ success: true, message: "Otp has been sent to your email" });
+        .json({ success: true, message: "OTP has been sent to your email" });
     }
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -148,24 +141,21 @@ const resetPassword = async (req, res) => {
 };
 
 // VERIFY OTP ROUTE
-const verifyOtp = async (req, res) => {
+export const verifyOtp = async (req, res) => {
   const { otp, newPassword } = req.body;
 
   try {
     const securePassword = await bcrypt.hash(newPassword, 10);
 
-    let user = await User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { otp },
       {
-        $set: {
-          password: securePassword,
-          otp: 0,
-        },
+        $set: { password: securePassword, otp: 0 },
       }
     );
 
     if (!user) {
-      return res.status(400).json({ success: false, message: "Invalid Otp" });
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
     return res.status(200).json({ success: true, message: "Password Updated" });
@@ -173,5 +163,3 @@ const verifyOtp = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-
-module.exports = { signup, login, logout, getUser, resetPassword, verifyOtp };

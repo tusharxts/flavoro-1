@@ -2,12 +2,15 @@ import express from "express";
 const app = express();
 const port = 5000;
 import cors from "cors";
-import dotenv from "dotenv"
+// import dotenv from "dotenv"
 import { connectDb } from "./connection.js";
-import routes from "./routes";
+import routes from "./routes.js";
 import cookieParser from "cookie-parser";
+import { config } from "dotenv";
+config({ path: "./ser" });
 
-dotenv.config();
+
+// dotenv.config();
 
 connectDb();
 app.use(

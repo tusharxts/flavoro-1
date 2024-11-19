@@ -1,13 +1,13 @@
-const router = require("express").Router();
-const {
+import { Router } from "express";
+import {
   signup,
   login,
   logout,
   getUser,
   resetPassword,
   verifyOtp,
-} = require("./contollers/AuthController");
-const {
+} from "./controllers/AuthController.js";
+import {
   decrementQuantity,
   addToCart,
   removeFromCart,
@@ -15,8 +15,10 @@ const {
   getCart,
   checkout,
   clearCart,
-} = require("./contollers/FeatureController");
-const { verifyToken } = require("./middlewares/verifyToken");
+} from "./controllers/FeatureController.js";
+import { verifyToken } from "./middlewares/verifyToken.js";
+
+const router = Router();
 
 // AUTH ROUTES
 router.post("/signup", signup);
@@ -33,5 +35,6 @@ router.delete("/remove-from-cart/:id", removeFromCart);
 router.put("/increment-quantity/:id", incrementQuantity);
 router.put("/decrement-quantity/:id", decrementQuantity);
 router.get("/checkout", verifyToken, checkout);
-router.get("/clear-cart",verifyToken,clearCart)
-module.exports = router;
+router.get("/clear-cart", verifyToken, clearCart);
+
+export default router;

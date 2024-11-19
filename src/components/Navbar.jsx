@@ -43,8 +43,8 @@ const Navbar = () => {
     <nav className="flex flex-col lg:flex-row justify-between items-center gap-5 py-4 px-6 bg-#fdd835; shadow-lg rounded-md m-0">
       <div className="text-center lg:text-left">
         <h3 className="text-lg font-semibold text-gray-500">{}</h3>
-        <h1 className="text-3xl font-bold text-gray-800 tracking-wide">
-          Sprincles Food
+        <h1 className="text-3xl font-bold text-gray-800 tracking-wide  ">
+          Flavoro
         </h1>
       </div>
 

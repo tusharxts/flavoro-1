@@ -1,18 +1,18 @@
-import User from "../models/User";
-import Food from "../models/Food";
-import stripe from "stripe";
+import User from "../models/User.js";
+import Food from "../models/Food.js";
+import Stripe from "stripe";
 
+const stripe = new Stripe("sk_test_51Pr2Y7RqZVvd8Y477jHJVObEZ2V5YvEnnOfiAdttav09BghYw9kOg3jZjA252TEZOuWolKcs9RqblTJEiLadZLo900ZVt85pBT");
 
-stripe("sk_test_51Pr2Y7RqZVvd8Y477jHJVObEZ2V5YvEnnOfiAdttav09BghYw9kOg3jZjA252TEZOuWolKcs9RqblTJEiLadZLo900ZVt85pBT")
-// "sk_test_51Pr2Y7RqZVvd8Y477jHJVObEZ2V5YvEnnOfiAdttav09BghYw9kOg3jZjA252TEZOuWolKcs9RqblTJEiLadZLo900ZVt85pBT"
-
-const addToCart = async (req, res) => {
+// Add to Cart
+export const addToCart = async (req, res) => {
   const userId = req.params.id;
   const { id, name, price, rating, image, quantity } = req.body;
 
   try {
-    let existingItem = await Food.findOne({ id, userId: userId });
+    let existingItem = await Food.findOne({ id, userId });
     console.log("Existing Item", existingItem);
+
     if (existingItem) {
       let updatedItem = await Food.findOneAndUpdate(
         { id, userId },
@@ -24,9 +24,10 @@ const addToCart = async (req, res) => {
         },
         {
           upsert: true,
-          new: true, // To return the updated document
+          new: true,
         }
       );
+
       if (!updatedItem) {
         return res
           .status(404)
@@ -34,6 +35,7 @@ const addToCart = async (req, res) => {
       }
       return res.status(201).json({ success: true, message: "Added to cart" });
     }
+
     let newFood = await Food.create({
       id,
       name,
@@ -45,6 +47,7 @@ const addToCart = async (req, res) => {
       totalPrice: price * quantity,
     });
     const savedFood = await newFood.save();
+
     let user = await User.findOneAndUpdate(
       { _id: userId },
       {
@@ -66,7 +69,8 @@ const addToCart = async (req, res) => {
   }
 };
 
-const getCart = async (req, res) => {
+// Get Cart
+export const getCart = async (req, res) => {
   const userId = req.params.id;
 
   try {
@@ -83,7 +87,8 @@ const getCart = async (req, res) => {
   }
 };
 
-const removeFromCart = async (req, res) => {
+// Remove from Cart
+export const removeFromCart = async (req, res) => {
   const id = req.params.id;
   console.log("Id from params", id);
 
@@ -104,7 +109,8 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-const incrementQuantity = async (req, res) => {
+// Increment Quantity
+export const incrementQuantity = async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -120,9 +126,10 @@ const incrementQuantity = async (req, res) => {
       ],
       {
         upsert: true,
-        new: true, // To return the updated document
+        new: true,
       }
     );
+
     if (!food) {
       return res
         .status(404)
@@ -137,7 +144,8 @@ const incrementQuantity = async (req, res) => {
   }
 };
 
-const decrementQuantity = async (req, res) => {
+// Decrement Quantity
+export const decrementQuantity = async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -147,7 +155,6 @@ const decrementQuantity = async (req, res) => {
         {
           $set: {
             quantity: { $subtract: ["$quantity", 1] },
-            // price: { $multiply: ["$price", { $subtract: ["$quantity", 1] }] },
             totalPrice: {
               $subtract: ["$totalPrice", "$price"],
             },
@@ -175,7 +182,8 @@ const decrementQuantity = async (req, res) => {
   }
 };
 
-const checkout = async (req, res) => {
+// Checkout
+export const checkout = async (req, res) => {
   const userId = req.id;
   try {
     const cartItems = await Food.find({ userId });
@@ -206,32 +214,16 @@ const checkout = async (req, res) => {
   }
 };
 
-const clearCart = async (req, res) => {
+// Clear Cart
+export const clearCart = async (req, res) => {
   const userId = req.id;
 
   try {
-    const deletedItems = await Food.deleteMany({ userId: userId });
-    const deletedList = await User.findOneAndUpdate(
-      { _id: userId },
-      { cartItems: [] }
-    );
-    if (!deletedItems) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Failed to clear cart" });
-    }
+    await Food.deleteMany({ userId });
+    await User.findOneAndUpdate({ _id: userId }, { cartItems: [] });
+
     return res.status(200).json({ success: true, message: "Order Confirmed" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-};
-
-module.exports = {
-  addToCart,
-  removeFromCart,
-  incrementQuantity,
-  decrementQuantity,
-  getCart,
-  checkout,
-  clearCart,
 };

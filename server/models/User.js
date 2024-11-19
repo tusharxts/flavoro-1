@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Food = require("./Food");
+import mongoose from "mongoose";
+import Food from "../models/Food";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     default: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "food",
+        ref: "Food",
       },
     ],
   },
@@ -30,5 +30,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("user", userSchema);
-module.exports = User;
+const User = mongoose.model("User", userSchema);
+
+export default User;
